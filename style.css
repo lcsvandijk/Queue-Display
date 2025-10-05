@@ -1,0 +1,374 @@
+/* ===================================================================
+   EFTELING DASHBOARD - STYLESHEET
+   ===================================================================
+   Alle styling voor het Efteling dashboard
+   Uitgebreide notities voor eenvoudig aanpassen
+================================================================== */
+
+/* -------------------------------------------------------------------
+   ALGEMENE BODY STYLING
+------------------------------------------------------------------- */
+body {
+  /* Lettertype: standaard sans-serif (Arial-achtig) */
+  font-family: Arial, sans-serif;
+  
+  /* Achtergrondkleur: lichtgrijs */
+  background-color: #EFE3CB;
+  
+  /* Padding: ruimte rondom de hele pagina */
+  padding: 20px;
+  
+  /* Margin: geen extra marge */
+  margin: 0;
+  
+  /* Vertical scroll toegestaan */
+  overflow-y: scroll;
+  
+  /* BELANGRIJK: verberg scrollbar in Firefox */
+  scrollbar-width: none;
+}
+
+/* BELANGRIJK: verberg scrollbar in Chrome/Safari/Edge */
+body::-webkit-scrollbar {
+  display: none;
+}
+
+/* -------------------------------------------------------------------
+   HEADER STYLING (bovenaan de pagina)
+------------------------------------------------------------------- */
+header {
+  /* Center de tekst */
+  text-align: center;
+  
+  /* Ruimte onder de header */
+  margin-bottom: 15px;
+}
+
+/* Hoofdtitel (h1) styling */
+header h1 {
+  /* Marge rondom de titel */
+  margin: 10px 0;
+  
+  /* Kleur van de titel: donkergrijs */
+  color: #333;
+}
+
+/* Subtitle styling (onder de titel) */
+header .subtitle {
+  /* Tekstkleur: middel grijs */
+  color: #666;
+  
+  /* Lettergrootte: iets kleiner dan normaal */
+  font-size: 0.9rem;
+}
+
+/* -------------------------------------------------------------------
+   CONTROLS SECTIE (status en laatst geüpdatet)
+------------------------------------------------------------------- */
+#controls {
+  /* Center de tekst */
+  text-align: center;
+  
+  /* Ruimte onder de controls */
+  margin-bottom: 20px;
+}
+
+/* Status tekst styling */
+#status {
+  /* Lettergrootte: iets kleiner dan normaal */
+  font-size: 0.9rem;
+  
+  /* Kleur: middel grijs */
+  color: #555;
+  
+  /* Display: block zodat laatste update eronder komt */
+  display: block;
+  
+  /* Kleine ruimte onder de status */
+  margin-bottom: 5px;
+}
+
+/* Laatst geüpdatet tekst styling */
+#lastUpdated {
+  /* Lettergrootte: nog iets kleiner */
+  font-size: 0.85rem;
+  
+  /* Kleur: lichter grijs */
+  color: #777;
+  
+  /* Display: block voor nieuwe regel */
+  display: block;
+}
+
+/* -------------------------------------------------------------------
+   PARK SECTIE STYLING (per rijk)
+------------------------------------------------------------------- */
+.park-section {
+  /* Maximum breedte: houdt tabellen netjes */
+  max-width: 800px;
+  
+  /* Center de sectie horizontaal */
+  margin: 35px auto;
+}
+
+/* Section header (rijknaam) styling */
+.section-header {
+  /* Achtergrondkleur: lichtgrijs */
+  background-color: #006B7F;
+  
+  /* Padding: ruimte binnen de header */
+  padding: 12px 15px;
+  
+  /* Border radius: afgeronde hoeken boven */
+  border-radius: 8px 8px 0 0;
+  
+  /* Geen marge */
+  margin: 0;
+  
+  /* Lettergrootte: iets groter dan normaal */
+  font-size: 1.2rem;
+  
+  /* Bold tekst */
+  font-weight: bold;
+  
+  /* Border: grijze rand */
+  border: 1px solid #ccc;
+  
+  /* Geen border onderaan (komt tabel) */
+  border-bottom: none;
+  
+  /* Tekstkleur: donkergrijs */
+  color: #ffffff;
+}
+
+/* -------------------------------------------------------------------
+   TABEL WRAPPER
+------------------------------------------------------------------- */
+.table-wrap {
+  /* Geen extra styling, maar beschikbaar voor toekomstige aanpassingen */
+}
+
+/* -------------------------------------------------------------------
+   TABEL STYLING
+------------------------------------------------------------------- */
+table {
+  /* Breedte: 100% van parent */
+  width: 100%;
+  
+  /* Border collapse: geen dubbele borders */
+  border-collapse: collapse;
+  
+  /* Achtergrondkleur: wit */
+  background-color: #93c1ca;
+  
+  /* Border: grijze rand rondom */
+  border: 1px solid #ccc;
+  
+  /* Border radius: afgeronde hoeken onderaan */
+  border-radius: 0 0 12px 12px;
+  
+  /* Overflow hidden: zorgt voor nette afgeronde hoeken */
+  overflow: hidden;
+
+  color: #460000;
+
+  font-weight: bold;
+}
+
+/* -------------------------------------------------------------------
+   TABEL CEL STYLING (th en td)
+------------------------------------------------------------------- */
+th, td {
+  /* Padding: ruimte binnen cellen */
+  padding: 10px 14px;
+  
+  /* Tekst links uitgelijnd */
+  text-align: left;
+  
+  /* Verticaal gecentreerd */
+  vertical-align: middle;
+}
+
+/* Table header (th) styling */
+th {
+  /* Achtergrondkleur: zeer licht grijs */
+  background-color: #fafafa;
+  
+  /* Bold tekst */
+  font-weight: bold;
+  
+  /* Border onderaan: lichtgrijze lijn */
+  border-bottom: 1px solid #eee;
+}
+
+/* BELANGRIJK: Laatste kolom (wachttijden/showtijden) rechts uitlijnen */
+td:last-child {
+  /* Tekst rechts uitgelijnd */
+  text-align: right;
+  
+  /* EXTRA padding rechts voor ruimte tussen bubbels en rand */
+  padding-right: 18px;
+}
+
+/* -------------------------------------------------------------------
+   RIJ STYLING (borders tussen rijen)
+------------------------------------------------------------------- */
+
+/* Standaard rij styling */
+tr.standard-row {
+  /* Border onderaan: lichtgrijze lijn */
+  border-top: 1px solid #eee;
+}
+
+/* BELANGRIJK: Geen border tussen standby en single rider */
+tr.standard-row + tr.single-rider-row {
+  /* Verwijder border bovenaan single rider */
+  border-top: none;
+}
+
+/* BELANGRIJK: Border ONDER single rider rij */
+tr.single-rider-row {
+  /* Border onderaan: lichtgrijze lijn */
+  border-bottom: 1px solid #eee;
+}
+
+/* Single rider tekst styling (lichter maken) */
+tr.single-rider-row td:first-child {
+  /* Lichtere kleur voor "Single rider" tekst */
+  color: #888;
+  
+  /* Padding links: extra inspringen */
+  padding-left: 30px;
+  
+  /* Kleinere font size */
+  font-size: 0.9rem;
+}
+
+/* Laatste rij: geen border onderaan nodig */
+tbody tr:last-child {
+  border-bottom: none;
+}
+
+/* -------------------------------------------------------------------
+   BUBBELS (wachttijden en showtijden)
+------------------------------------------------------------------- */
+.bubble {
+  /* Display: inline-block voor width/height control */
+  display: inline-block;
+  
+  /* Padding: ruimte binnen de bubble */
+  padding: 5px 10px;
+  
+  /* Border radius: volledig afgeronde hoeken */
+  border-radius: 4px;
+  
+  /* Bold tekst */
+  font-weight: bold;
+  
+  /* Tekstkleur: wit */
+  color: white;
+  
+  /* Lettergrootte: iets kleiner dan normaal */
+  font-size: 0.9rem;
+  
+  /* Min-width: zorgt voor consistente breedte */
+  min-width: 50px;
+  
+  /* Tekst gecentreerd */
+  text-align: center;
+
+  opacity: 1;
+}
+
+/* BUBBLE KLEUREN */
+
+/* Future showtime: oranje */
+.bubble.future { 
+  background-color: #ff8c00; 
+}
+
+/* Past showtime: grijs */
+.bubble.past { 
+  background-color: #bbbbbb; 
+  opacity: 0.8;
+  color: #6b6363;
+  font-weight: inherit;
+}
+
+/* Queue wait time: blauw */
+.bubble.queue { 
+  background-color: #DD9215; 
+}
+
+/* -------------------------------------------------------------------
+   SMOOTH SCROLLING
+------------------------------------------------------------------- */
+html, body {
+  /* Smooth scroll behavior voor anchor links */
+  scroll-behavior: smooth;
+}
+
+/* -------------------------------------------------------------------
+   FOOTER STYLING
+------------------------------------------------------------------- */
+footer {
+  /* Center de tekst */
+  text-align: center;
+  
+  /* Ruimte boven de footer */
+  margin-top: 40px;
+  
+  /* Tekstkleur: licht grijs */
+  color: #999;
+}
+
+/* -------------------------------------------------------------------
+   ERROR BOX STYLING
+------------------------------------------------------------------- */
+.error-box {
+  /* Achtergrondkleur: licht rood */
+  background-color: #ffebee;
+  
+  /* Tekstkleur: donker rood */
+  color: #c62828;
+  
+  /* Padding: ruimte binnen de box */
+  padding: 20px;
+  
+  /* Border radius: afgeronde hoeken */
+  border-radius: 8px;
+  
+  /* Border: rode rand */
+  border: 1px solid #ef5350;
+  
+  /* Maximum breedte */
+  max-width: 800px;
+  
+  /* Center horizontaal */
+  margin: 20px auto;
+  
+  /* Tekst gecentreerd */
+  text-align: center;
+}
+
+/* ===================================================================
+   EINDE VAN STYLESHEET
+   ===================================================================
+   
+   KLEUREN OVERZICHT:
+   - Achtergrond body: #f8f8f8 (lichtgrijs)
+   - Achtergrond tabel: #fff (wit)
+   - Headers: #f0f0f0 (lichtgrijs)
+   - Borders: #ccc en #eee (grijs tinten)
+   - Tekst: #333 (donker), #555/#666/#777 (middel), #888/#999 (licht)
+   - Bubble oranje: #ff8c00
+   - Bubble grijs: #999
+   - Bubble blauw: #1e90ff
+   - Error rood: #c62828 / #ffebee
+   
+   MAKKELIJK AANPASBAAR:
+   - Wijzig kleuren door hex codes te vervangen
+   - Wijzig padding/margin voor meer/minder ruimte
+   - Wijzig font-size voor grotere/kleinere tekst
+   - Wijzig border-radius voor meer/minder afronding
+================================================================== */
