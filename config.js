@@ -8,7 +8,7 @@
 // -------------------------------------------------------------------
 // Zet op true om lokale dummydata te gebruiken
 // Zet op false om live data van de API op te halen
-const USE_DUMMY_DATA = true;
+const USE_DUMMY_DATA = false;
 
 // -------------------------------------------------------------------
 // LIVE API URL
