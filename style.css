@@ -6,30 +6,34 @@
 ================================================================== */
 
 /* -------------------------------------------------------------------
+   GOOGLE FONTS IMPORT (optioneel)
+------------------------------------------------------------------- */
+/* Voeg hier je Google Fonts imports toe, bijvoorbeeld:
+   @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');
+   @import url('https://fonts.googleapis.com/css2?family=Open+Sans&display=swap');
+*/
+
+/* -------------------------------------------------------------------
    ALGEMENE BODY STYLING
 ------------------------------------------------------------------- */
 body {
-  /* Lettertype: standaard sans-serif (Arial-achtig) */
   font-family: Arial, sans-serif;
-  
-  /* Achtergrondkleur: lichtgrijs */
   background-color: #EFE3CB;
-  
-  /* Padding: ruimte rondom de hele pagina */
   padding: 20px;
-  
-  /* Margin: geen extra marge */
   margin: 0;
-  
-  /* Vertical scroll toegestaan */
-  overflow-y: scroll;
-  
-  /* BELANGRIJK: verberg scrollbar in Firefox */
+
+  /* Scroll alleen als nodig, niet standaard */
+  overflow-y: auto;
+
+  /* Verberg scrollbar in Firefox */
   scrollbar-width: none;
 }
 
-/* BELANGRIJK: verberg scrollbar in Chrome/Safari/Edge */
+/* Verberg scrollbar in Chrome/Safari/Edge */
 body::-webkit-scrollbar {
+  display: none;
+}
+body::-webkit-scrollbar-button {
   display: none;
 }
 
@@ -111,9 +115,54 @@ header .subtitle {
   margin: 35px auto;
 }
 
+/* -------------------------------------------------------------------
+   CONTENT WRAPPER (voor overlap positioning)
+------------------------------------------------------------------- */
+.content-wrapper {
+  /* Relative positioning voor absolute children */
+  position: relative;
+}
+
+/* -------------------------------------------------------------------
+   RIJK AFBEELDING STYLING
+------------------------------------------------------------------- */
+.rijk-image-container {
+  /* Center de afbeelding */
+  text-align: center;
+  
+  /* Zorg dat container niet breekt */
+  width: 100%;
+}
+
+.rijk-image {
+  /* Responsive: schaal afbeelding naar beneden op kleine schermen */
+  width: 100%;
+  
+  /* Hoogte automatisch voor aspect ratio */
+  height: auto;
+  
+  /* Display als block voor proper centering */
+  display: block;
+  
+  /* Center via margin */
+  margin-left: auto;
+  margin-right: auto;
+  
+  /* Object fit voor consistente afbeelding sizing */
+  object-fit: contain;
+}
+
+/* -------------------------------------------------------------------
+   TABLE WITH HEADER WRAPPER
+------------------------------------------------------------------- */
+.table-with-header {
+  /* Relative positioning voor proper stacking */
+  position: relative;
+}
+
 /* Section header (rijknaam) styling */
 .section-header {
-  /* Achtergrondkleur: lichtgrijs */
+  /* Achtergrondkleur: lichtgrijs (wordt overschreven per rijk) */
   background-color: #006B7F;
   
   /* Padding: ruimte binnen de header */
@@ -137,7 +186,7 @@ header .subtitle {
   /* Geen border onderaan (komt tabel) */
   border-bottom: none;
   
-  /* Tekstkleur: donkergrijs */
+  /* Tekstkleur: wit */
   color: #ffffff;
 }
 
@@ -158,7 +207,7 @@ table {
   /* Border collapse: geen dubbele borders */
   border-collapse: collapse;
   
-  /* Achtergrondkleur: wit */
+  /* Achtergrondkleur: lichtblauw */
   background-color: #93c1ca;
   
   /* Border: grijze rand rondom */
@@ -170,9 +219,27 @@ table {
   /* Overflow hidden: zorgt voor nette afgeronde hoeken */
   overflow: hidden;
 
+  /* Tekstkleur: donkerrood */
   color: #460000;
 
+  /* Bold tekst */
   font-weight: bold;
+}
+
+/* Tabel zonder header row: afgeronde hoeken bovenaan tbody */
+table.no-header-row {
+  /* Border radius: afgeronde hoeken bovenaan EN onderaan */
+  border-radius: 12px 12px 12px 12px;
+}
+
+table.no-header-row tbody tr:first-child td:first-child {
+  /* Border radius: linkerbovenhoek */
+  border-top-left-radius: 12px;
+}
+
+table.no-header-row tbody tr:first-child td:last-child {
+  /* Border radius: rechterbovenhoek */
+  border-top-right-radius: 12px;
 }
 
 /* -------------------------------------------------------------------
@@ -199,6 +266,9 @@ th {
   
   /* Border onderaan: lichtgrijze lijn */
   border-bottom: 1px solid #eee;
+  
+  /* Border radius voor afgeronde hoeken bovenaan */
+  border-radius: 8px 8px 0 0;
 }
 
 /* BELANGRIJK: Laatste kolom (wachttijden/showtijden) rechts uitlijnen */
@@ -211,41 +281,205 @@ td:last-child {
 }
 
 /* -------------------------------------------------------------------
-   RIJ STYLING (borders tussen rijen)
+   NAAM CEL STYLING (met nummer en afbeelding cirkels)
 ------------------------------------------------------------------- */
-
-/* Standaard rij styling */
-tr.standard-row {
-  /* Border onderaan: lichtgrijze lijn */
-  border-top: 1px solid #eee;
-}
-
-/* BELANGRIJK: Geen border tussen standby en single rider */
-tr.standard-row + tr.single-rider-row {
-  /* Verwijder border bovenaan single rider */
-  border-top: none;
-}
-
-/* BELANGRIJK: Border ONDER single rider rij */
-tr.single-rider-row {
-  /* Border onderaan: lichtgrijze lijn */
-  border-bottom: 1px solid #eee;
-}
-
-/* Single rider tekst styling (lichter maken) */
-tr.single-rider-row td:first-child {
-  /* Lichtere kleur voor "Single rider" tekst */
-  color: #888;
+.name-cell {
+  /* Flex container voor horizontale layout */
+  display: flex;
   
-  /* Padding links: extra inspringen */
-  padding-left: 30px;
+  /* Items verticaal gecentreerd */
+  align-items: center;
+  
+  /* Ruimte tussen items */
+  gap: 10px;
+}
+
+/* Nummer cirkel styling */
+.number-circle {
+  /* Flexibel: shrink niet, grow niet */
+  flex-shrink: 0;
+  
+  /* Breedte en hoogte: perfect vierkant */
+  width: 28px;
+  height: 28px;
+  
+  /* Border radius: perfecte cirkel */
+  border-radius: 50%;
+  
+  /* Achtergrondkleur: standaard grijs (wordt overschreven per rijk) */
+  background-color: #006B7F;
+  
+  /* Tekstkleur: wit */
+  color: #ffffff;
+  
+  /* Font size: iets kleiner */
+  font-size: 0.85rem;
+  
+  /* Bold tekst */
+  font-weight: bold;
+  
+  /* Flex container voor centering */
+  display: flex;
+  
+  /* Horizontaal center */
+  justify-content: center;
+  
+  /* Verticaal center */
+  align-items: center;
+}
+
+/* Afbeelding cirkel styling */
+.image-circle {
+  /* Flexibel: shrink niet, grow niet */
+  flex-shrink: 0;
+  
+  /* Breedte en hoogte: perfect vierkant */
+  width: 40px;
+  height: 40px;
+  
+  /* Border radius: perfecte cirkel */
+  border-radius: 50%;
+  
+  /* Overflow: verberg uitstekende delen van afbeelding */
+  overflow: hidden;
+  
+  /* Flex container voor centering */
+  display: flex;
+  
+  /* Horizontaal center */
+  justify-content: center;
+  
+  /* Verticaal center */
+  align-items: center;
+  
+  /* Achtergrondkleur voor lege afbeeldingen */
+  background-color: #e0e0e0;
+}
+
+/* Afbeelding binnen cirkel */
+.image-circle img {
+  /* Breedte: 100% van container */
+  width: 100%;
+  
+  /* Hoogte: 100% van container */
+  height: 100%;
+  
+  /* Object fit: cover (vult cirkel, behoudt aspect ratio) */
+  object-fit: cover;
+}
+
+/* Lege cirkels voor single rider uitlijning */
+.empty-circle {
+  /* Visibility: hidden (neemt ruimte in maar is onzichtbaar) */
+  visibility: hidden;
+}
+
+/* Naam tekst styling */
+.name-text {
+  /* Flex: groei om resterende ruimte op te vullen */
+  flex: 1;
+}
+
+/* Single rider tekst styling */
+.single-rider-text {
+  /* Italic tekst */
+  font-style: italic;
+  
+  /* Lichtere kleur */
+  color: #888;
   
   /* Kleinere font size */
   font-size: 0.9rem;
 }
 
+/* -------------------------------------------------------------------
+   RIJ STYLING (borders tussen rijen)
+------------------------------------------------------------------- */
+
+/* Standaard rij styling */
+tr.standard-row td {
+  /* Border bovenaan: lichtgrijze lijn, maar niet tot de rand */
+  border-top: 1px solid #eee;
+  
+  /* Background clip: padding box zorgt dat border niet tot rand komt */
+  background-clip: padding-box;
+}
+
+/* Eerste rij: geen border bovenaan */
+tbody tr:first-child td {
+  border-top: none;
+}
+
+/* BELANGRIJK: Geen border tussen standby en single rider */
+tr.standard-row + tr.single-rider-row td {
+  /* Verwijder border bovenaan single rider */
+  border-top: none;
+}
+
+/* BELANGRIJK: Border styling voor single rider row */
+tr.single-rider-row td {
+  /* Border onderaan: lichtgrijze lijn, maar niet tot de rand */
+  border-bottom: 1px solid #eee;
+  
+  /* Background clip: padding box */
+  background-clip: padding-box;
+}
+
+/* Creëer visuele padding door border in te korten */
+td {
+  /* Box shadow voor border effect dat niet tot rand komt */
+  box-shadow: inset 10px 0 0 0 #93c1ca, inset -10px 0 0 0 #93c1ca;
+}
+
+/* Alternatieve aanpak: pseudo-element voor ingekorte border */
+tr.standard-row td::before {
+  content: "";
+  position: absolute;
+  left: 14px;
+  right: 14px;
+  top: 0;
+  height: 1px;
+  background-color: #eee;
+}
+
+tbody tr:first-child td::before {
+  display: none;
+}
+
+/* Reset voor proper border display */
+td {
+  position: relative;
+  box-shadow: none;
+}
+
+tr.standard-row td {
+  border-top: none;
+}
+
+tr.standard-row::before {
+  content: "";
+  position: absolute;
+  left: 14px;
+  right: 14px;
+  top: 0;
+  height: 1px;
+  background-color: #eee;
+}
+
+tbody tr:first-child::before {
+  display: none;
+}
+
+tr.standard-row {
+  position: relative;
+}
+
 /* Laatste rij: geen border onderaan nodig */
 tbody tr:last-child {
+  border-bottom: none;
+}
+
+tbody tr:last-child td {
   border-bottom: none;
 }
 
@@ -277,6 +511,7 @@ tbody tr:last-child {
   /* Tekst gecentreerd */
   text-align: center;
 
+  /* Opacity: volledig zichtbaar */
   opacity: 1;
 }
 
@@ -287,7 +522,7 @@ tbody tr:last-child {
   background-color: #ff8c00; 
 }
 
-/* Past showtime: grijs */
+/* Past showtime / status messages (grijs) */
 .bubble.past { 
   background-color: #bbbbbb; 
   opacity: 0.8;
@@ -295,7 +530,7 @@ tbody tr:last-child {
   font-weight: inherit;
 }
 
-/* Queue wait time: blauw */
+/* Queue wait time / status messages (geel/oranje) */
 .bubble.queue { 
   background-color: #DD9215; 
 }
@@ -356,14 +591,14 @@ footer {
    ===================================================================
    
    KLEUREN OVERZICHT:
-   - Achtergrond body: #f8f8f8 (lichtgrijs)
-   - Achtergrond tabel: #fff (wit)
-   - Headers: #f0f0f0 (lichtgrijs)
+   - Achtergrond body: #EFE3CB (beige)
+   - Achtergrond tabel: #93c1ca (lichtblauw)
+   - Headers: Verschillende kleuren per rijk
    - Borders: #ccc en #eee (grijs tinten)
-   - Tekst: #333 (donker), #555/#666/#777 (middel), #888/#999 (licht)
+   - Tekst: #460000 (donkerrood), #888/#999 (grijs tinten)
    - Bubble oranje: #ff8c00
-   - Bubble grijs: #999
-   - Bubble blauw: #1e90ff
+   - Bubble grijs: #bbbbbb
+   - Bubble wachttijd: #DD9215 (geel/oranje)
    - Error rood: #c62828 / #ffebee
    
    MAKKELIJK AANPASBAAR:
@@ -371,4 +606,8 @@ footer {
    - Wijzig padding/margin voor meer/minder ruimte
    - Wijzig font-size voor grotere/kleinere tekst
    - Wijzig border-radius voor meer/minder afronding
+   - Cirkel groottes: .number-circle en .image-circle width/height
+   - Ruimte tussen cirkels: .name-cell gap property
+   - Afbeelding overlap: IMAGE_STYLING.overlapOffset in config.js
+   - Single rider spacing: SPACING.singleRiderMarginTop in config.js
 ================================================================== */
