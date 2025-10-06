@@ -8,7 +8,7 @@
 // -------------------------------------------------------------------
 // Zet op true om lokale dummydata te gebruiken
 // Zet op false om live data van de API op te halen
-const USE_DUMMY_DATA = false;
+const USE_DUMMY_DATA = true;
 
 // -------------------------------------------------------------------
 // LIVE API URL
@@ -17,17 +17,25 @@ const USE_DUMMY_DATA = false;
 const API_URL = "https://api.themeparks.wiki/v1/entity/21776b5a-1444-4924-8ab2-6c66d9219628/live";
 
 // -------------------------------------------------------------------
+// ACHTERGROND AFBEELDING
+// -------------------------------------------------------------------
+// URL naar een achtergrondafbeelding voor de hele pagina
+// Laat leeg ("") of null voor effen kleur (#EFE3CB)
+// De afbeelding wordt altijd volledig ingezoomd om het scherm te vullen
+const BACKGROUND_IMAGE = "";
+
+// -------------------------------------------------------------------
 // RIJKEN (PARK AREAS)
 // -------------------------------------------------------------------
 // De volgorde hier bepaalt de weergavevolgorde op de pagina
-// Items die niet in een rijk zijn toegewezen komen in "Onbekend"
+// Items die niet in een rijk zijn toegewezen worden NIET weergegeven
 const RIJKEN = [
-  "Marerijk", 
   "Reizenrijk", 
+  "Marerijk", 
+  "Sprookjesbos",
   "Ruigrijk", 
+  "Fantasierijk",
   "Anderrijk", 
-  "Fantasierijk", 
-  "Onbekend"
 ];
 
 // -------------------------------------------------------------------
@@ -41,7 +49,47 @@ const RIJK_COLORS = {
   "Ruigrijk": "#2F4F4F",
   "Anderrijk": "#556B2F",
   "Fantasierijk": "#483D8B",
-  "Onbekend": "#696969"
+  "Sprookjesbos": "#483D8B",
+};
+
+// -------------------------------------------------------------------
+// RIJK TABEL ACHTERGRONDKLEUREN
+// -------------------------------------------------------------------
+// Achtergrondkleur voor de tabelcellen per rijk
+const RIJK_TABLE_COLORS = {
+  "Marerijk": "#DFF0E5",
+  "Reizenrijk": "#FBEAD1",
+  "Ruigrijk": "#FBE3E5",
+  "Anderrijk": "#E4F4F8",
+  "Fantasierijk": "#F8E9F1",
+  "Sprookjesbos": "#F0F2D9",
+};
+
+// -------------------------------------------------------------------
+// RIJK BORDER KLEUREN
+// -------------------------------------------------------------------
+// Kleur van de lijnen tussen attracties per rijk
+const RIJK_BORDER_COLORS = {
+  "Marerijk": "#7da8b0",
+  "Reizenrijk": "#b88d5d",
+  "Ruigrijk": "#ffffffff",
+  "Anderrijk": "#9aab7f",
+  "Fantasierijk": "#9a91ba",
+  "Sprookjesbos": "#9a91ba",
+};
+
+// -------------------------------------------------------------------
+// RIJK TABEL RAND STYLING
+// -------------------------------------------------------------------
+// Styling voor de rand rondom elke tabel per rijk
+// Format: { color: "kleur", width: "dikte" }
+const RIJK_TABLE_BORDER = {
+  "Marerijk": { color: "#24663F", width: "1px" },
+  "Reizenrijk": { color: "#D57912", width: "1px" },
+  "Ruigrijk": { color: "#961D24", width: "1px" },
+  "Anderrijk": { color: "#016A80", width: "1px" },
+  "Fantasierijk": { color: "#8C406D", width: "1px" },
+  "Sprookjesbos": { color: "#8A8B48", width: "1px" },
 };
 
 // -------------------------------------------------------------------
@@ -54,7 +102,7 @@ const RIJK_NUMBER_COLORS = {
   "Ruigrijk": { background: "#2F4F4F", text: "#ffffff" },
   "Anderrijk": { background: "#556B2F", text: "#ffffff" },
   "Fantasierijk": { background: "#483D8B", text: "#ffffff" },
-  "Onbekend": { background: "#696969", text: "#ffffff" }
+  "Sprookjesbos": { background: "#483D8B", text: "#ffffff" },
 };
 
 // -------------------------------------------------------------------
@@ -63,12 +111,12 @@ const RIJK_NUMBER_COLORS = {
 // Afbeelding die boven elke rijktabel wordt weergegeven
 // Laat leeg ("") om geen afbeelding weer te geven
 const RIJK_IMAGES = {
-  "Marerijk": "https://www.efteling.com/nl/-/media/images/social-open-graph/1200x628-python-kurkentrekker.jpg",
-  "Reizenrijk": "https://www.efteling.com/nl/-/media/images/social-open-graph/1200x628-python-kurkentrekker.jpg",
-  "Ruigrijk": "https://www.efteling.com/nl/-/media/images/social-open-graph/1200x628-python-kurkentrekker.jpg",
-  "Anderrijk": "https://www.efteling.com/nl/-/media/images/social-open-graph/1200x628-python-kurkentrekker.jpg",
-  "Fantasierijk": "https://www.efteling.com/nl/-/media/images/social-open-graph/1200x628-python-kurkentrekker.jpg",
-  "Onbekend": ""
+  "Marerijk": "../images/marerijk.png",
+  "Reizenrijk": "../images/reizenrijk.png",
+  "Ruigrijk": "../images/ruigrijk.png",
+  "Anderrijk": "../images/anderrijk.png",
+  "Fantasierijk": "../images/fantasierijk.png",
+  "Sprookjesbos": "../images/sprookjesbos.png",
 };
 
 // -------------------------------------------------------------------
@@ -94,10 +142,28 @@ const HIDE_CLOSED = false;          // Verberg attracties met status CLOSED
 const STATUS_MESSAGES = {
   "REFURBISHMENT": { text: "Vandaag Gesloten", style: "grijs" },
   "CLOSED": { text: "Gesloten", style: "grijs" },
+  "DOWN": { text: "Tijdelijk buiten werking", style: "grijs" },
   "OPERATING": null,  // null = toon normale wachttijd/showtijd
-  "OPERATING_NULL": { text: "Momenteel gesloten", style: "grijs" },
-  "NO_MORE_SHOWS": { text: "Vandaag geen shows meer", style: "grijs" }
+  "OPERATING_NULL": { text: "Geopend", style: "geel" },
+  "NO_MORE_SHOWS": { text: "Vandaag geen shows meer", style: "grijs" },
+  "NO_SHOWS_TODAY": { text: "Vandaag geen voorstellingen", style: "grijs" },
 };
+
+// -------------------------------------------------------------------
+// SINGLE RIDER STATUS BERICHTEN
+// -------------------------------------------------------------------
+// Custom berichten voor single rider wachttijden
+// Deze worden gebruikt als de single rider waitTime een specifieke waarde heeft
+// Format: waitTime waarde -> { text: "Bericht", style: "geel" of "grijs" }
+// BELANGRIJK: Grijze berichten (style: "grijs") overschrijven altijd gele berichten
+const SINGLE_RIDER_WAIT_TIME_MESSAGES = {
+  null: { text: "Niet beschikbaar", style: "geel" },
+  // Voeg meer toe indien nodig, bijvoorbeeld:
+  // 0: { text: "Geen wachttijd", style: "geel" }
+};
+
+// Status bericht voor single rider als main attractie niet OPERATING is
+const SINGLE_RIDER_CLOSED_MESSAGE = { text: "Gesloten", style: "grijs" };
 
 // -------------------------------------------------------------------
 // WACHTTIJD OPMAAK
@@ -109,6 +175,12 @@ const WAIT_TIME_FORMAT = {
 };
 
 // -------------------------------------------------------------------
+// SHOWTIJD INSTELLINGEN
+// -------------------------------------------------------------------
+// Hoeveel showtijden maximaal weergeven (rest gaat in "+X" bubble)
+const MAX_SHOWTIMES_DISPLAY = 4;
+
+// -------------------------------------------------------------------
 // CUSTOM RIJK TOEWIJZINGEN
 // -------------------------------------------------------------------
 // Wijs attracties en shows toe aan rijken via hun externalId
@@ -117,61 +189,69 @@ const WAIT_TIME_FORMAT = {
 // BELANGRIJK: 
 // - Gebruik exact dezelfde rijknaam als in RIJKEN array
 // - Voor SHOWS: nummer en afbeelding zijn optioneel, laat weg of zet op null om te verbergen
-// - Als een attractie single rider heeft, gaat die automatisch mee
+// - Als een attractie/show NIET in deze lijst staat, wordt deze NIET weergegeven
+// - Als nummer of afbeelding null is, wordt de default afbeelding gebruikt
 const CUSTOM_PARK_AREA_MAP = {
   // MARERIJK
-  "villavolta": { rijk: "Marerijk", nummer: 1, afbeelding: "https://www.efteling.com/nl/-/media/images/social-open-graph/1200x628-python-kurkentrekker.jpg" },
-  "pardoesdetovernar": { rijk: "Marerijk", nummer: null, afbeelding: null },  // Show zonder nummer/afbeelding
-  "kinderspoor": { rijk: "Marerijk", nummer: 3, afbeelding: "https://via.placeholder.com/40" },
-  "gondoletta": { rijk: "Marerijk", nummer: 4, afbeelding: "https://via.placeholder.com/40" },
-  "droomvlucht": { rijk: "Marerijk", nummer: 5, afbeelding: "https://via.placeholder.com/40" },
-  "kleuterhof": { rijk: "Marerijk", nummer: 6, afbeelding: "https://via.placeholder.com/40" },
-  "archipel": { rijk: "Marerijk", nummer: 7, afbeelding: "https://via.placeholder.com/40" },
-  "speelbosnest": { rijk: "Marerijk", nummer: 8, afbeelding: "https://via.placeholder.com/40" },
-  "stoomtreinm": { rijk: "Marerijk", nummer: 9, afbeelding: "https://via.placeholder.com/40" },
-  "sprookjesbos": { rijk: "Marerijk", nummer: 10, afbeelding: "https://via.placeholder.com/40" },
-  "stoomcarrousel": { rijk: "Marerijk", nummer: 11, afbeelding: "https://via.placeholder.com/40" },
-  "kindervreugd": { rijk: "Marerijk", nummer: 12, afbeelding: "https://via.placeholder.com/40" },
+  "villavolta": { rijk: "Marerijk", nummer: 1, afbeelding: "https://i.ibb.co/BV5XqKDw/Chat-GPT-Image-6-okt-2025-21-31-57-removebg-preview.png" },
+  "kinderspoor": { rijk: "Marerijk", nummer: 3, afbeelding: "https://i.ibb.co/BV5XqKDw/Chat-GPT-Image-6-okt-2025-21-31-57-removebg-preview.png" },
+  "gondoletta": { rijk: "Marerijk", nummer: 4, afbeelding: "https://i.ibb.co/BV5XqKDw/Chat-GPT-Image-6-okt-2025-21-31-57-removebg-preview.png" },
+  "droomvlucht": { rijk: "Marerijk", nummer: 5, afbeelding: "https://i.ibb.co/BV5XqKDw/Chat-GPT-Image-6-okt-2025-21-31-57-removebg-preview.png" },
+  "kleuterhof": { rijk: "Marerijk", nummer: 6, afbeelding: "https://i.ibb.co/BV5XqKDw/Chat-GPT-Image-6-okt-2025-21-31-57-removebg-preview.png" },
+  "archipel": { rijk: "Marerijk", nummer: 7, afbeelding: "https://i.ibb.co/BV5XqKDw/Chat-GPT-Image-6-okt-2025-21-31-57-removebg-preview.png" },
+  "speelbosnest": { rijk: "Marerijk", nummer: 8, afbeelding: "https://i.ibb.co/BV5XqKDw/Chat-GPT-Image-6-okt-2025-21-31-57-removebg-preview.png" },
+  "stoomtreinm": { rijk: "Marerijk", nummer: 9, afbeelding: "https://i.ibb.co/BV5XqKDw/Chat-GPT-Image-6-okt-2025-21-31-57-removebg-preview.png" },
+  "sprookjesbos": { rijk: "Marerijk", nummer: 10, afbeelding: "https://i.ibb.co/BV5XqKDw/Chat-GPT-Image-6-okt-2025-21-31-57-removebg-preview.png" },
+  "stoomcarrousel": { rijk: "Marerijk", nummer: 11, afbeelding: "https://i.ibb.co/BV5XqKDw/Chat-GPT-Image-6-okt-2025-21-31-57-removebg-preview.png" },
+  "kindervreugd": { rijk: "Marerijk", nummer: 12, afbeelding: "https://i.ibb.co/BV5XqKDw/Chat-GPT-Image-6-okt-2025-21-31-57-removebg-preview.png" },
   
   // REIZENRIJK
-  "sirocco": { rijk: "Reizenrijk", nummer: 1, afbeelding: "https://via.placeholder.com/40" },
-  "fatamorgana": { rijk: "Reizenrijk", nummer: 2, afbeelding: "https://via.placeholder.com/40" },
-  "halvemaen": { rijk: "Reizenrijk", nummer: 3, afbeelding: "https://via.placeholder.com/40" },
-  "carnavalfestival": { rijk: "Reizenrijk", nummer: 4, afbeelding: "https://via.placeholder.com/40" },
-  "pagode": { rijk: "Reizenrijk", nummer: 5, afbeelding: "https://via.placeholder.com/40" },
-  "caro": { rijk: "Reizenrijk", nummer: null, afbeelding: null },  // Show
-  "stoomtreinr": { rijk: "Reizenrijk", nummer: 7, afbeelding: "https://via.placeholder.com/40" },
+  "sirocco": { rijk: "Reizenrijk", nummer: 1, afbeelding: "https://i.ibb.co/BV5XqKDw/Chat-GPT-Image-6-okt-2025-21-31-57-removebg-preview.png" },
+  "fatamorgana": { rijk: "Reizenrijk", nummer: 2, afbeelding: "https://i.ibb.co/BV5XqKDw/Chat-GPT-Image-6-okt-2025-21-31-57-removebg-preview.png" },
+  "halvemaen": { rijk: "Reizenrijk", nummer: 3, afbeelding: "https://i.ibb.co/BV5XqKDw/Chat-GPT-Image-6-okt-2025-21-31-57-removebg-preview.png" },
+  "carnavalfestival": { rijk: "Reizenrijk", nummer: 4, afbeelding: "https://i.ibb.co/BV5XqKDw/Chat-GPT-Image-6-okt-2025-21-31-57-removebg-preview.png" },
+  "pagode": { rijk: "Reizenrijk", nummer: 5, afbeelding: "https://i.ibb.co/BV5XqKDw/Chat-GPT-Image-6-okt-2025-21-31-57-removebg-preview.png" },
+  "caro": { rijk: "Reizenrijk", nummer: 0, afbeelding: null },  // Show
+  "stoomtreinr": { rijk: "Reizenrijk", nummer: 7, afbeelding: "https://i.ibb.co/BV5XqKDw/Chat-GPT-Image-6-okt-2025-21-31-57-removebg-preview.png" },
   
   // RUIGRIJK
-  "devliegendehollander": { rijk: "Ruigrijk", nummer: 1, afbeelding: "https://via.placeholder.com/40" },
-  "python": { rijk: "Ruigrijk", nummer: 2, afbeelding: "https://via.placeholder.com/40" },
-  "baron1898": { rijk: "Ruigrijk", nummer: 3, afbeelding: "https://via.placeholder.com/40" },
-  "jorisendedraak": { rijk: "Ruigrijk", nummer: 4, afbeelding: "https://via.placeholder.com/40" },
+  "devliegendehollander": { rijk: "Ruigrijk", nummer: 1, afbeelding: "https://i.ibb.co/BV5XqKDw/Chat-GPT-Image-6-okt-2025-21-31-57-removebg-preview.png" },
+  "python": { rijk: "Ruigrijk", nummer: 2, afbeelding: "https://i.ibb.co/BV5XqKDw/Chat-GPT-Image-6-okt-2025-21-31-57-removebg-preview.png" },
+  "baron1898": { rijk: "Ruigrijk", nummer: 3, afbeelding: "https://i.ibb.co/BV5XqKDw/Chat-GPT-Image-6-okt-2025-21-31-57-removebg-preview.png" },
+  "jorisendedraak": { rijk: "Ruigrijk", nummer: 4, afbeelding: "https://i.ibb.co/BV5XqKDw/Chat-GPT-Image-6-okt-2025-21-31-57-removebg-preview.png" },
   
   // ANDERRIJK
-  "volkvanlaaf": { rijk: "Anderrijk", nummer: 1, afbeelding: "https://via.placeholder.com/40" },
-  "volkvanlaafmonorail": { rijk: "Anderrijk", nummer: 2, afbeelding: "https://via.placeholder.com/40" },
+  "volkvanlaaf": { rijk: "Anderrijk", nummer: 1, afbeelding: "https://i.ibb.co/BV5XqKDw/Chat-GPT-Image-6-okt-2025-21-31-57-removebg-preview.png" },
+  "volkvanlaafmonorail": { rijk: "Anderrijk", nummer: 2, afbeelding: "https://i.ibb.co/BV5XqKDw/Chat-GPT-Image-6-okt-2025-21-31-57-removebg-preview.png" },
   "raveleijn": { rijk: "Anderrijk", nummer: null, afbeelding: null },  // Show
-  "diorama": { rijk: "Anderrijk", nummer: 4, afbeelding: "https://via.placeholder.com/40" },
-  "fabula": { rijk: "Anderrijk", nummer: 5, afbeelding: "https://via.placeholder.com/40" },
+  "diorama": { rijk: "Anderrijk", nummer: 4, afbeelding: "https://i.ibb.co/BV5XqKDw/Chat-GPT-Image-6-okt-2025-21-31-57-removebg-preview.png" },
+  "fabula": { rijk: "Anderrijk", nummer: 5, afbeelding: "https://i.ibb.co/BV5XqKDw/Chat-GPT-Image-6-okt-2025-21-31-57-removebg-preview.png" },
   
   // FANTASIERIJK
-  "sprookjesboomerwaseens": { rijk: "Fantasierijk", nummer: null, afbeelding: null },  // Show
-  "jokieenjet": { rijk: "Fantasierijk", nummer: null, afbeelding: null },  // Show
-  "ontmoeteftelingbewoners": { rijk: "Fantasierijk", nummer: null, afbeelding: null },  // Show
-  "eftelingmuseum": { rijk: "Fantasierijk", nummer: 4, afbeelding: "https://via.placeholder.com/40" },
-  "doudetuffer": { rijk: "Fantasierijk", nummer: 5, afbeelding: "https://via.placeholder.com/40" },
-  "carrouselsantonpieckplein": { rijk: "Fantasierijk", nummer: 6, afbeelding: "https://via.placeholder.com/40" },
-  "aquanura": { rijk: "Fantasierijk", nummer: null, afbeelding: null },  // Show
-  "sprookjessprokkelaar": { rijk: "Fantasierijk", nummer: null, afbeelding: null },  // Show
-  "pirana": { rijk: "Fantasierijk", nummer: 9, afbeelding: "https://via.placeholder.com/40" },
-  "vogelrok": { rijk: "Fantasierijk", nummer: 10, afbeelding: "https://via.placeholder.com/40" },
-  "antonpieckpleinpoppenkasttheater": { rijk: "Fantasierijk", nummer: null, afbeelding: null },  // Show
-  "dansemacabre": { rijk: "Fantasierijk", nummer: 12, afbeelding: "https://via.placeholder.com/40" },
-  "symbolica": { rijk: "Fantasierijk", nummer: 13, afbeelding: "https://via.placeholder.com/40" },
-  "maxmoritz": { rijk: "Fantasierijk", nummer: 14, afbeelding: "https://via.placeholder.com/40" },
-  "virginieenottocharlatan": { rijk: "Fantasierijk", nummer: 6, afbeelding: "https://via.placeholder.com/40" }  // Show
+  
+  "jokieenjet": { rijk: "Fantasierijk", nummer: 1, afbeelding: null },  // Show
+  "ontmoeteftelingbewoners": { rijk: "Fantasierijk", nummer: 1, afbeelding: null },  // Show
+  "eftelingmuseum": { rijk: "Fantasierijk", nummer: 4, afbeelding: null },
+  "doudetuffer": { rijk: "Fantasierijk", nummer: 5, afbeelding: null },
+  "carrouselsantonpieckplein": { rijk: "Fantasierijk", nummer: 6, afbeelding: null },
+  "aquanura": { rijk: "Fantasierijk", nummer: 1, afbeelding: null },  // Show
+  "sprookjessprokkelaar": { rijk: "Fantasierijk", nummer: 1, afbeelding: null },  // Show
+  "pirana": { rijk: "Fantasierijk", nummer: 9, afbeelding: null },
+  "vogelrok": { rijk: "Fantasierijk", nummer: 1, afbeelding: null },
+  "antonpieckpleinpoppenkasttheater": { rijk: "Fantasierijk", nummer: 1, afbeelding: null },  // Show
+  "dansemacabre": { rijk: "Fantasierijk", nummer: 12, afbeelding: null },
+  "symbolica": { rijk: "Fantasierijk", nummer: 13, afbeelding: null },
+  "maxmoritz": { rijk: "Fantasierijk", nummer: 14, afbeelding: null },
+  "virginieenottocharlatan": { rijk: "Fantasierijk", nummer: 1, afbeelding: null },  // Show
+  "pardoesdetovernar": { rijk: "Fantasierijk", nummer: 69, afbeelding: null },  // Show zonder nummer/afbeelding
+
+  // SPROOKJESBOS
+  "sprookjesboomerwaseens": { rijk: "Sprookjesbos", nummer: 1, afbeelding: null },  // Show
 };
+
+// DEFAULT AFBEELDING
+// Deze afbeelding wordt gebruikt als nummer of afbeelding null is
+const DEFAULT_ATTRACTION_IMAGE = "https://i.ibb.co/BV5XqKDw/Chat-GPT-Image-6-okt-2025-21-31-57-removebg-preview.png";
 
 // -------------------------------------------------------------------
 // FONTS
@@ -188,11 +268,11 @@ const CUSTOM_PARK_AREA_MAP = {
 // 5. Gebruik hier de fontnaam: "Roboto, sans-serif"
 
 const FONTS = {
-  attractionName: "Arial, sans-serif",      // Font voor attractienamen
-  singleRider: "Arial, sans-serif",         // Font voor "Single rider" tekst
-  bubbleText: "Arial, sans-serif",          // Font voor tekst in de wachttijd bubbels
-  numberCircle: "Arial, sans-serif",        // Font voor nummers in de cirkels
-  sectionHeader: "Arial, sans-serif"        // Font voor rijk titels
+  attractionName: "AlegreyaSans-Medium",      // Font voor attractienamen
+  singleRider: "AlegreyaSans-Regular",         // Font voor "Single rider" tekst
+  bubbleText: "AlegreyaSans-Regular",          // Font voor tekst in de wachttijd bubbels
+  numberCircle: "AlegreyaSans-Regular",        // Font voor nummers in de cirkels
+  sectionHeader: "AlegreyaSans-Regular"        // Font voor rijk titels
 };
 
 // -------------------------------------------------------------------
@@ -217,7 +297,10 @@ const IMAGE_STYLING = {
 // SPACING INSTELLINGEN
 // -------------------------------------------------------------------
 const SPACING = {
-  singleRiderMarginTop: "0px"  // Ruimte tussen hoofdattractie en single rider rij (bijv. "2px", "5px", "10px")
+  singleRiderMarginTop: "-10px"  // Ruimte tussen hoofdattractie en single rider rij
+                                 // Negatieve waarden zorgen voor overlap
+                                 // "0px" = direct tegen elkaar aan
+                                 // "-10px" = 10px overlap
 };
 
 // -------------------------------------------------------------------
@@ -238,7 +321,8 @@ const SCROLL_PAUSE_BOTTOM = 2;
 // -------------------------------------------------------------------
 // Hoe vaak de data wordt ververst (in minuten)
 // Let op: refresh gebeurt vloeiend zonder de pagina opnieuw te laden
-const REFRESH_INTERVAL_MINUTES = 5;
+// Alleen wachttijden, showtijden en statussen worden geüpdatet
+const REFRESH_INTERVAL_MINUTES = 1;
 
 // -------------------------------------------------------------------
 // STYLING OPTIES

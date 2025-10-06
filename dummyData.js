@@ -627,37 +627,37 @@ const dummyData = {
       "entityType": "SHOW",
       "parkId": "30713cf6-69a9-47c9-a505-52bb965f01be",
       "externalId": "antonpieckpleinpoppenkasttheater",
-      "status": "CLOSED",
+      "status": "OPERATING",
       "showtimes": [
         {
           "type": "Parkshow",
-          "endTime": "2025-10-05T13:15:00+02:00",
-          "startTime": "2025-10-05T13:00:00+02:00"
+          "endTime": "2025-10-06T22:15:00+02:00",
+          "startTime": "2025-10-06T22:00:00+02:00"
         },
         {
           "type": "Parkshow",
-          "endTime": "2025-10-05T13:45:00+02:00",
-          "startTime": "2025-10-05T13:30:00+02:00"
+          "endTime": "2025-10-06T22:35:00+02:00",
+          "startTime": "2025-10-06T22:20:00+02:00"
         },
         {
           "type": "Parkshow",
-          "endTime": "2025-10-05T14:45:00+02:00",
-          "startTime": "2025-10-05T14:30:00+02:00"
+          "endTime": "2025-10-06T22:55:00+02:00",
+          "startTime": "2025-10-06T22:40:00+02:00"
         },
         {
           "type": "Parkshow",
-          "endTime": "2025-10-05T15:15:00+02:00",
-          "startTime": "2025-10-05T15:00:00+02:00"
+          "endTime": "2025-10-06T23:15:00+02:00",
+          "startTime": "2025-10-06T23:00:00+02:00"
         },
         {
           "type": "Parkshow",
-          "endTime": "2025-10-05T16:15:00+02:00",
-          "startTime": "2025-10-05T16:00:00+02:00"
+          "endTime": "2025-10-06T23:35:00+02:00",
+          "startTime": "2025-10-06T23:20:00+02:00"
         },
         {
           "type": "Parkshow",
-          "endTime": "2025-10-05T16:45:00+02:00",
-          "startTime": "2025-10-05T16:30:00+02:00"
+          "endTime": "2025-10-06T23:55:00+02:00",
+          "startTime": "2025-10-06T23:40:00+02:00"
         }
       ],
       "lastUpdated": "2025-10-05T14:45:20Z"
@@ -681,7 +681,7 @@ const dummyData = {
           "waitTime": 10
         }
       },
-      "status": "CLOSED",
+      "status": "OPERATING",
       "lastUpdated": "2025-10-05T18:01:07Z"
     },
     {

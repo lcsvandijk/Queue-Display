@@ -16,9 +16,39 @@
 /* -------------------------------------------------------------------
    ALGEMENE BODY STYLING
 ------------------------------------------------------------------- */
+@font-face {
+    font-family: 'Ernestine'; /*a name to be used later*/
+    src: url('../fonts/Ernestine.ttf'); /*URL to font*/
+}
+
+@font-face {
+    font-family: 'AlegreyaSans-Regular'; /*a name to be used later*/
+    src: url('../fonts/AlegreyaSans-Regular.ttf'); /*URL to font*/
+}
+
+@font-face {
+    font-family: 'AlegreyaSans-Medium'; /*a name to be used later*/
+    src: url('../fonts/AlegreyaSans-Medium.ttf'); /*URL to font*/
+}
+
+@font-face{
+    font-family: "ErnestineWeb W03 Demibold";
+    src: url("https://db.onlinewebfonts.com/t/3fc63a23f059226f5f0dfd2b715e12aa.eot");
+    src: url("https://db.onlinewebfonts.com/t/3fc63a23f059226f5f0dfd2b715e12aa.eot?#iefix")format("embedded-opentype"),
+        url("https://db.onlinewebfonts.com/t/3fc63a23f059226f5f0dfd2b715e12aa.woff")format("woff"),
+        url("https://db.onlinewebfonts.com/t/3fc63a23f059226f5f0dfd2b715e12aa.woff2")format("woff2"),
+        url("https://db.onlinewebfonts.com/t/3fc63a23f059226f5f0dfd2b715e12aa.ttf")format("truetype"),
+        url("https://db.onlinewebfonts.com/t/3fc63a23f059226f5f0dfd2b715e12aa.svg#ErnestineWeb W03 Demibold")format("svg");
+    font-weight:normal;
+    font-style:normal;
+    font-display:swap;
+}
+
+
+ 
 body {
   font-family: Arial, sans-serif;
-  background-color: #EFE3CB;
+  background-color: #f5f9ed;
   padding: 20px;
   margin: 0;
 
@@ -27,6 +57,12 @@ body {
 
   /* Verberg scrollbar in Firefox */
   scrollbar-width: none;
+
+  /* Background image styling */
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
 }
 
 /* Verberg scrollbar in Chrome/Safari/Edge */
@@ -112,7 +148,7 @@ header .subtitle {
   max-width: 800px;
   
   /* Center de sectie horizontaal */
-  margin: 35px auto;
+  margin: 0px auto;
 }
 
 /* -------------------------------------------------------------------
@@ -147,9 +183,11 @@ header .subtitle {
   /* Center via margin */
   margin-left: auto;
   margin-right: auto;
+  margin-bottom: 20px;
   
   /* Object fit voor consistente afbeelding sizing */
   object-fit: contain;
+  scale: 0.55;
 }
 
 /* -------------------------------------------------------------------
@@ -194,7 +232,10 @@ header .subtitle {
    TABEL WRAPPER
 ------------------------------------------------------------------- */
 .table-wrap {
-  /* Geen extra styling, maar beschikbaar voor toekomstige aanpassingen */
+  /* Box shadow voor mooie rand om tabel */
+  box-shadow: 0 0 0 1px #ccc;
+  border-radius: 12px;
+  overflow: hidden;
 }
 
 /* -------------------------------------------------------------------
@@ -207,7 +248,7 @@ table {
   /* Border collapse: geen dubbele borders */
   border-collapse: collapse;
   
-  /* Achtergrondkleur: lichtblauw */
+  /* Achtergrondkleur: lichtblauw (wordt overschreven per rijk) */
   background-color: #93c1ca;
   
   /* Border: grijze rand rondom */
@@ -230,11 +271,13 @@ table {
 table.no-header-row {
   /* Border radius: afgeronde hoeken bovenaan EN onderaan */
   border-radius: 12px 12px 12px 12px;
+
 }
 
 table.no-header-row tbody tr:first-child td:first-child {
   /* Border radius: linkerbovenhoek */
   border-top-left-radius: 12px;
+  margin-top: 20px;
 }
 
 table.no-header-row tbody tr:first-child td:last-child {
@@ -366,6 +409,9 @@ td:last-child {
   
   /* Object fit: cover (vult cirkel, behoudt aspect ratio) */
   object-fit: cover;
+  
+  /* Object position: center de afbeelding */
+  object-position: center;
 }
 
 /* Lege cirkels voor single rider uitlijning */
@@ -378,6 +424,9 @@ td:last-child {
 .name-text {
   /* Flex: groei om resterende ruimte op te vullen */
   flex: 1;
+  letter-spacing:0.89px;
+  font-size: 110%;
+  font-weight: 100;
 }
 
 /* Single rider tekst styling */
@@ -398,8 +447,8 @@ td:last-child {
 
 /* Standaard rij styling */
 tr.standard-row td {
-  /* Border bovenaan: lichtgrijze lijn, maar niet tot de rand */
-  border-top: 1px solid #eee;
+  /* Border bovenaan: lichtgrijze lijn (wordt overschreven per rijk via --border-color) */
+  border-top: 1px solid var(--border-color, #eee);
   
   /* Background clip: padding box zorgt dat border niet tot rand komt */
   background-clip: padding-box;
@@ -414,18 +463,19 @@ tbody tr:first-child td {
 tr.standard-row + tr.single-rider-row td {
   /* Verwijder border bovenaan single rider */
   border-top: none;
+  border-bottom: none;
 }
 
 /* BELANGRIJK: Border styling voor single rider row */
 tr.single-rider-row td {
-  /* Border onderaan: lichtgrijze lijn, maar niet tot de rand */
+  /* Border onderaan: lichtgrijze lijn (wordt overschreven per rijk) */
   border-bottom: 1px solid #eee;
   
   /* Background clip: padding box */
   background-clip: padding-box;
 }
 
-/* Creëer visuele padding door border in te korten */
+/* CreÃ«er visuele padding door border in te korten */
 td {
   /* Box shadow voor border effect dat niet tot rand komt */
   box-shadow: inset 10px 0 0 0 #93c1ca, inset -10px 0 0 0 #93c1ca;
@@ -497,7 +547,7 @@ tbody tr:last-child td {
   border-radius: 4px;
   
   /* Bold tekst */
-  font-weight: bold;
+  font-weight: 500;
   
   /* Tekstkleur: wit */
   color: white;
@@ -513,6 +563,8 @@ tbody tr:last-child td {
 
   /* Opacity: volledig zichtbaar */
   opacity: 1;
+
+  font-family: 'Ernestine';
 }
 
 /* BUBBLE KLEUREN */
@@ -533,6 +585,44 @@ tbody tr:last-child td {
 /* Queue wait time / status messages (geel/oranje) */
 .bubble.queue { 
   background-color: #DD9215; 
+}
+
+/* -------------------------------------------------------------------
+   SHOWTIME CONTAINER (meerdere showtijden)
+------------------------------------------------------------------- */
+.showtime-container {
+  display: inline-flex;
+  align-items: stretch;
+  border-radius: 4px;
+  overflow: hidden;
+  background-color: #ff8c00;
+}
+
+.showtime-container .showtime-item {
+  display: inline-block;
+  padding: 5px 10px;
+  font-weight: bold;
+  color: white;
+  font-size: 0.9rem;
+  min-width: 50px;
+  text-align: center;
+  border-right: 2px solid rgba(255, 255, 255, 0.5);
+  background-color: transparent;
+}
+
+.showtime-container .showtime-item:last-child {
+  border-right: none;
+}
+
+.showtime-container .showtime-more {
+  display: inline-block;
+  padding: 5px 8px;
+  font-weight: bold;
+  color: white;
+  font-size: 0.85rem;
+  min-width: 35px;
+  text-align: center;
+  background-color: rgba(0, 0, 0, 0.15);
 }
 
 /* -------------------------------------------------------------------
@@ -591,10 +681,10 @@ footer {
    ===================================================================
    
    KLEUREN OVERZICHT:
-   - Achtergrond body: #EFE3CB (beige)
-   - Achtergrond tabel: #93c1ca (lichtblauw)
+   - Achtergrond body: #EFE3CB (beige) of afbeelding
+   - Achtergrond tabel: #93c1ca (lichtblauw) - configureerbaar per rijk
    - Headers: Verschillende kleuren per rijk
-   - Borders: #ccc en #eee (grijs tinten)
+   - Borders: #ccc en #eee (grijs tinten) - configureerbaar per rijk
    - Tekst: #460000 (donkerrood), #888/#999 (grijs tinten)
    - Bubble oranje: #ff8c00
    - Bubble grijs: #bbbbbb
